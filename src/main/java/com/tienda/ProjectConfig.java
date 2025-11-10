@@ -126,7 +126,6 @@ public class ProjectConfig implements WebMvcConfigurer {
                 .build();
         return new InMemoryUserDetailsManager(user, sales, admin);
 }
- 
 
 }
 
