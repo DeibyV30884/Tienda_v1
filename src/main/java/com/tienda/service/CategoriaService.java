@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 package com.tienda.service;
 
 import com.tienda.domain.Categoria;
@@ -20,22 +19,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class CategoriaService {
 
     @Autowired
-    private CategoriaRepository categoriaRepository;
-
+    private CategoriaRepository categoriaRepository; //CRUD R=READ C=CREATE U=UPDATE D=DELETE C-> CREATE (INGRESAR A LA BD Y VOY A CREAR NUEVAS CATEGORIAS 
+    
     @Transactional(readOnly = true)
-    public List<Categoria> getCategorias(boolean activo) {
+    public List<Categoria> getCategorias(boolean activo) { //Read -> Ingresar a la bd pueda leer toda la informacion de la categoria
         var lista = categoriaRepository.findAll();
         if (activo) {
             lista.removeIf(e -> !e.getActivo());
         }
         return lista;
     }
-
+    
     @Transactional
-    public void save(Categoria categoria) {
+    public void save(Categoria categoria){ 
         categoriaRepository.save(categoria);
     }
-
+    
     @Transactional 
     public boolean delete(Categoria categoria){ 
         try{
@@ -46,10 +45,9 @@ public class CategoriaService {
             return false;
         }
     }
-
+    
     @Transactional(readOnly = true)
-    public Categoria getCategoria(Categoria categoria) {
+    public Categoria getCategoria(Categoria categoria){ 
         return categoriaRepository.findById(categoria.getIdCategoria()).orElse(null);
     }
-
 }

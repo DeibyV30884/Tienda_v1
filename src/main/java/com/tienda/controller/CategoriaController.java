@@ -7,6 +7,7 @@ package com.tienda.controller;
 import com.tienda.domain.Categoria;
 import com.tienda.service.CategoriaService;
 import com.tienda.service.FirebaseStorageService;
+import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -18,11 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Locale;
-
 /**
  *
- * @author Deiby
+ * @author erick
  */
 @Controller
 @RequestMapping("/categoria")
@@ -33,7 +32,7 @@ public class CategoriaController {
 
     @Autowired
     private FirebaseStorageService firebaseStorageService;
- 
+
     @Autowired
     private MessageSource messageSource;
 
@@ -45,30 +44,27 @@ public class CategoriaController {
         return "/categoria/listado"; //las vistas que yo voy a crear en el html
     }
 
-    @PostMapping("/modificar")
+    @PostMapping("/modificar") //https:localhost/categoria/modificar
     public String modificar(Categoria categoria, Model model) {
         categoria = categoriaService.getCategoria(categoria);
         model.addAttribute("categoria", categoria);
-        return "/categoria/modifica";
+        return "/categoria/modifica"; //la vista que tengo que generar en el html
     }
 
     @PostMapping("/guardar")
     public String guardar(Categoria categoria,
-            @RequestParam(required = false) MultipartFile imagenFile,
+            @RequestParam MultipartFile imagenFile,
             RedirectAttributes redirectAttributes) {
-
-        categoriaService.save(categoria);
-
-        if (imagenFile != null && !imagenFile.isEmpty()) {
+        if (!imagenFile.isEmpty()) { // Si no está vacío... pasaron una imagen...
+            categoriaService.save(categoria);
             String rutaImagen = firebaseStorageService
                     .cargaImagen(
                             imagenFile,
                             "categoria",
                             categoria.getIdCategoria());
             categoria.setRutaImagen(rutaImagen);
-            categoriaService.save(categoria);
         }
-
+        categoriaService.save(categoria);
         redirectAttributes.addFlashAttribute("todoOk",
                 messageSource.getMessage("mensaje.actualizado",
                         null,
